@@ -26,7 +26,6 @@ app.layout = html.Div(className='main-container', children=[
             options=[
                 {'label': ' Empirique (Historique)', 'value': 'VaR_Hist'},
                 {'label': ' Normale (Paramétrique)', 'value': 'VaR_Param'},
-                {'label': ' GARCH-t (Advanced)', 'value': 'VaR_Garch'},
                 {'label': ' Comparison Mode', 'value': 'Compare'}
             ],
             value='VaR_Hist',
@@ -48,11 +47,10 @@ app.layout = html.Div(className='main-container', children=[
     html.Div(id='metrics-grid', style={'display': 'grid', 'gridTemplateColumns': 'repeat(4, 1fr)', 'gap': '20px', 'marginBottom': '40px'}),
     
     html.Div(className='card section-analyses card-elevation-only', children=[
-        html.H2("BASEL IV COMPLIANCE", className='kpi-label', style={'color': '#D6C5B0'}),
-        html.P("VaR 99%: Daily prediction using rolling window analytics."),
-        html.P("GARCH-t (Advanced): Dynamic volatility modeling using Student-t distribution to capture tail risk and volatility clustering."),
-        html.P("Expected Shortfall 97.5%: Average loss in extreme tail scenarios."),
-        html.P("Backtesting: Statistical comparison between predicted risk and realized loss.")
+        html.H2("BASEL IV COMPLIANCE", className='kpi-label', style={'color': '#3E2723'}),
+        html.P("VaR 99%: Daily prediction using rolling window analytics (Parametric vs Historical)."),
+        html.P("Expected Shortfall 97.5%: Calculated as the average of the worst 2.5% losses (Historical Tail Mean)."),
+        html.P("Backtesting: Comparison between predicted risk levels and realized daily losses to validate model stability.")
     ])
 ])
 
@@ -75,9 +73,6 @@ def update_dashboard(ticker, window_size, method):
     
     if method in ['VaR_Param', 'Compare']:
         fig.add_trace(go.Scatter(x=df.index, y=df['VaR_Param'], name='VaR Normale', line=dict(color='#1565C0', width=2)))
-
-    if method in ['VaR_Garch', 'Compare']:
-        fig.add_trace(go.Scatter(x=df.index, y=df['VaR_Garch'], name='VaR GARCH-t', line=dict(color='#E65100', width=2)))
 
     fig.add_trace(go.Scatter(x=df.index, y=df['ES_975'], name='ES 97.5%', line=dict(color='#3E2723', width=2, dash='dot')))
 
